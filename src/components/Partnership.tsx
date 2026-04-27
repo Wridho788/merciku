@@ -17,9 +17,9 @@ export const Partnership: React.FC<PartnershipProps> = ({ className }) => {
 
   // Check if sliderData has valid result
   const hasValidData =
-    sliderData?.content?.result &&
-    Array.isArray(sliderData.content.result) &&
-    sliderData.content.result.length > 0;
+    sliderData?.result &&
+    Array.isArray(sliderData.result) &&
+    sliderData.result.length > 0;
 
   // Don't render if no valid data
   if (sliderData && !hasValidData) {
@@ -34,9 +34,18 @@ export const Partnership: React.FC<PartnershipProps> = ({ className }) => {
     url?: string;
     alt?: string;
   };
+  
   const sponsors: Sponsor[] =
-    sliderData?.content?.result && Array.isArray(sliderData.content.result)
-      ? sliderData.content.result
+    sliderData?.result && Array.isArray(sliderData.result)
+      ? sliderData.result
+          .filter((item: any) => item.image) // Filter out items without images
+          .map((item: any) => ({
+            id: item.id,
+            name: item.name,
+            image: `${sliderData.image_url}${item.image}`, // Combine base URL with filename
+            url: item.url && item.url !== '#' ? item.url : undefined, // Skip # URLs
+            alt: item.name,
+          }))
       : [];
 
   // Auto slide every 5 seconds (pause when dragging)

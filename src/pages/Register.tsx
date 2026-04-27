@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MdPersonAdd } from 'react-icons/md';
 import { MdCalendarToday } from 'react-icons/md';
 import { AppbarAuth } from '../components/AppbarAuth';
-import { useRegister, useChapters, useCityList } from '../api/hooks/index';
+import { useRegister, useChapters } from '../api/hooks/index';
 import { toast } from 'react-toastify';
 import './Register.css';
 
@@ -31,7 +31,7 @@ const Register: React.FC = () => {
   // Hooks for API calls
   const registerMutation = useRegister();
   const { data: chaptersData, isLoading: chaptersLoading, error: chaptersError } = useChapters();
-  const { data: citiesData, isLoading: citiesLoading, error: citiesError } = useCityList();
+
 
   // State for loading and error handling
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,10 +39,10 @@ const Register: React.FC = () => {
     if (chaptersError) {
       console.error('Error loading chapters:', chaptersError);
     }
-    if (citiesError) {
-      console.error('Error loading cities:', citiesError);
-    }
-  }, [chaptersError, citiesError]);
+    // if (citiesError) {
+    //   console.error('Error loading cities:', citiesError);
+    // }
+  }, [chaptersError]);
 
 
   const handleRegistrationTypeChange = (type: 'member' | 'participant') => {
@@ -483,7 +483,7 @@ const Register: React.FC = () => {
                 <label htmlFor="city" className="form-label">
                   Kota
                 </label>
-                <select
+                {/* <select
                   id="city"
                   name="city"
                   value={formData.city}
@@ -494,26 +494,26 @@ const Register: React.FC = () => {
                 >
                   <option value="">
                     {citiesLoading ? 'Memuat kota...' : 'Pilih Kota'}
-                  </option>
-                  {citiesData?.content?.map((city: any) => (
+                  </option> */}
+                  {/* {citiesData?.content?.map((city: any) => (
                     <option key={city.id} value={city.id}>
                       {city.nama}
                     </option>
-                  )) || []}
+                  )) || []} */}
                   {/* Fallback options if API fails */}
-                  {citiesError && !citiesData && [
+                  {/* {citiesError && !citiesData && [
                     <option key="aceh" value="aceh">Aceh</option>,
                     <option key="medan" value="medan">Medan</option>,
                     <option key="jakarta" value="jakarta">Jakarta</option>,
                     <option key="bandung" value="bandung">Bandung</option>,
                     <option key="surabaya" value="surabaya">Surabaya</option>
-                  ]}
-                </select>
-                {citiesError && (
+                  ]} */}
+                {/* </select> */}
+                {/* {citiesError && (
                   <small style={{ color: 'red', fontSize: '12px' }}>
                     Error loading cities. Using fallback options.
                   </small>
-                )}
+                )} */}
               </div>
               {/* DOB Date Picker */}
               <div className="form-group">
@@ -694,7 +694,7 @@ const Register: React.FC = () => {
                 type="submit"
                 className="register-button dark-bg"
                 onClick={handleRegister}
-                disabled={isSubmitting || chaptersLoading || citiesLoading || !registrationType}
+                disabled={isSubmitting || chaptersLoading  || !registrationType}
               >
                 <span style={{ color: '#fff' }}>
                   {isSubmitting ? 'Sedang mendaftar...' : `Daftar sebagai ${registrationType === 'member' ? 'Member' : registrationType === 'participant' ? 'Peserta' : 'Pilih Tipe'}`}

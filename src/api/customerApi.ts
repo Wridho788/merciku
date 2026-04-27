@@ -9,7 +9,7 @@ import {
   ENDPOINT_CHANGE_PASSWORD,
   ENDPOINT_LOGOUT,
   ENDPOINT_GET_PROFILE,
-  ENDPOINT_GET_BY_ID,
+  // ENDPOINT_GET_BY_ID,
   ENDPOINT_NOTIF,
   ENDPOINT_NOTIF_DETAIL,
   ENDPOINT_DECODE_TOKEN,
@@ -203,22 +203,22 @@ export const customerApi = {
   /**
    * Get customer by ID
    */
-  getCustomerById: async (customerId: string, authToken: string): Promise<GetProfileResponse> => {
-    try {
-      const response = await apiClient.get(`${ENDPOINT_GET_BY_ID}${customerId}`, {
-        headers: {
-          'X-auth-token': authToken,
-        },
-      });
+  // getCustomerById: async (customerId: string, authToken: string): Promise<GetProfileResponse> => {
+  //   try {
+  //     const response = await apiClient.get(`${ENDPOINT_GET_BY_ID}${customerId}`, {
+  //       headers: {
+  //         'X-auth-token': authToken,
+  //       },
+  //     });
 
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('📊 Error Status:', error.response?.status);
-      }
-      throw error;
-    }
-  },
+  //     return response.data;
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       console.error('📊 Error Status:', error.response?.status);
+  //     }
+  //     throw error;
+  //   }
+  // },
 
   /**
    * Get notifications with dynamic payload
@@ -421,7 +421,7 @@ export const {
   register,
   changePassword,
   getProfile,
-  getCustomerById,
+  // getCustomerById,
   getNotifications,
   getNotificationDetail,
   decodeToken,

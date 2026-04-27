@@ -14,8 +14,10 @@ import { AppbarDefault } from '../components/AppbarDefault';
 import { FAB } from '../components/FAB';
 import { useCart as useCartContext } from '../contexts/CartContext';
 import { useAuthStore } from '../stores/authStore';
-import { useCart, useRemoveFromCart, useAddToCart, useSetPickup } from '../api/hooks/index';
-import { useAddOrder, useCheckoutOrder } from '../api/ordersApi';
+import { useCart, useRemoveFromCart, useSetPickup } from '../api/hooks/index';
+// import {
+//   useAddOrder,
+//   useCheckoutOrder } from '../api/ordersApi';
 import { useDecodeToken } from '../api/hooks/authHooks';
 import { toast } from 'react-toastify';
 import './Cart.css';
@@ -49,7 +51,11 @@ const Cart: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { cartCount, removeFromCart } = useCartContext();
-  const { isAuthenticated, token: authToken, requireAuth } = useAuthStore();
+  const {
+    isAuthenticated,
+    // token: authToken,
+    requireAuth,
+  } = useAuthStore();
 
   // Get the referring page from location state or referrer
   const getBackDestination = () => {
@@ -132,13 +138,13 @@ const Cart: React.FC = () => {
   } = useCart();
 
   const removeAllFromCartMutation = useRemoveFromCart();
-  const addToCartMutation = useAddToCart();
+
   const setPickupMutation = useSetPickup();
 
   // Order API hooks
-  const addOrderMutation = useAddOrder();
+  // const addOrderMutation = useAddOrder();
   // const addItemToOrderMutation = useAddItemToOrder();
-  const checkoutOrderMutation = useCheckoutOrder();
+  // const checkoutOrderMutation = useCheckoutOrder();
 
   // Decode token hook untuk mendapatkan cost data
   const { data: decodeTokenData } = useDecodeToken();
@@ -197,12 +203,12 @@ const Cart: React.FC = () => {
     }
 
     try {
-      await addToCartMutation.mutateAsync({
-        data: {
-          sku: item.sku,
-          qty: newQuantity.toString(),
-        },
-      });
+      // await addToCartMutation.mutateAsync({
+      //   data: {
+      //     sku: item.sku,
+      //     qty: newQuantity.toString(),
+      //   },
+      // });
 
       refetchCart();
     } catch (error: any) {
@@ -240,27 +246,27 @@ const Cart: React.FC = () => {
 
     try {
       // Find the item to get its details for the success message
-      const itemToRemove = apiCartData?.content?.result?.find(item => item.id === itemId);
+      const itemToRemove = apiCartData?.content?.result?.find((item) => item.id === itemId);
       const itemName = itemToRemove?.name || 'Item';
-      
+
       // Use quantity change with 0 to remove specific item via API
-      await addToCartMutation.mutateAsync({
-        data: {
-          sku: itemToRemove?.sku || itemId,
-          qty: '0', // Setting quantity to 0 removes the item
-        },
-      });
-      
+      // await addToCartMutation.mutateAsync({
+      //   data: {
+      //     sku: itemToRemove?.sku || itemId,
+      //     qty: '0', // Setting quantity to 0 removes the item
+      //   },
+      // });
+
       // Remove from context cart (for immediate UI update)
       removeFromCart(itemId);
-      
+
       // Show success message with item name
       toast.success(`${itemName.toUpperCase()} telah dihapus dari keranjang`, {
         position: 'bottom-right',
         autoClose: 1500,
         theme: 'dark',
       });
-      
+
       // Refresh cart data from API
       refetchCart();
     } catch (error: any) {
@@ -285,7 +291,7 @@ const Cart: React.FC = () => {
     }
 
     const cartItems = apiCartData?.content?.result || [];
-    
+
     if (cartItems.length === 0) {
       toast.warning('Keranjang kosong', {
         position: 'bottom-right',
@@ -296,23 +302,21 @@ const Cart: React.FC = () => {
     }
 
     try {
-      const promises = cartItems.map(item => 
-        setPickupMutation.mutateAsync(item.id)
-      );
-      
+      const promises = cartItems.map((item) => setPickupMutation.mutateAsync(item.id));
+
       await Promise.all(promises);
-      
+
       toast.success(
-        isPickup 
-          ? `Berhasil mengatur pengambilan sendiri untuk ${cartItems.length} produk` 
+        isPickup
+          ? `Berhasil mengatur pengambilan sendiri untuk ${cartItems.length} produk`
           : `Berhasil mengatur pengiriman untuk ${cartItems.length} produk`,
         {
           position: 'bottom-right',
           autoClose: 1500,
           theme: 'dark',
-        }
+        },
       );
-      
+
       // Refresh cart data to get updated pickup status and shipping costs
       refetchCart();
     } catch (error: any) {
@@ -395,7 +399,7 @@ const Cart: React.FC = () => {
     try {
       // Get current cart items
       const cartItems = apiCartData?.content?.result || [];
-      
+
       if (cartItems.length === 0) {
         toast.warning('Keranjang sudah kosong', {
           position: 'bottom-right',
@@ -406,20 +410,20 @@ const Cart: React.FC = () => {
       }
 
       // Remove each item by setting quantity to 0
-      const removePromises = cartItems.map(item => 
-        addToCartMutation.mutateAsync({
-          data: {
-            sku: item.sku,
-            qty: '0', // Setting quantity to 0 removes the item
-          },
-        })
-      );
+      // const removePromises = cartItems.map((item) =>
+      //   addToCartMutation.mutateAsync({
+      //     data: {
+      //       sku: item.sku,
+      //       qty: '0', // Setting quantity to 0 removes the item
+      //     },
+      //   }),
+      // );
 
-      await Promise.all(removePromises);
-      
+      // await Promise.all(removePromises);
+
       // Clear context cart as well
-      cartItems.forEach(item => removeFromCart(item.id));
-      
+      cartItems.forEach((item) => removeFromCart(item.id));
+
       toast.success('Semua item telah dihapus dari keranjang Anda', {
         position: 'bottom-right',
         autoClose: 1500,
@@ -453,7 +457,9 @@ const Cart: React.FC = () => {
   };
 
   const getShippingCost = () => {
-    return apiCartData?.content?.result?.reduce((total, item) => total + (item.shipping || 0), 0) || 0;
+    return (
+      apiCartData?.content?.result?.reduce((total, item) => total + (item.shipping || 0), 0) || 0
+    );
   };
 
   const getCostFromToken = () => {
@@ -520,124 +526,122 @@ const Cart: React.FC = () => {
       totalItems: cartItems.length,
     });
 
-    try {
-      // Step 1: Create Order (useAddOrder)
-      const orderResponse = await addOrderMutation.mutateAsync(authToken!);
+    // try {
+    //   // Step 1: Create Order (useAddOrder)
+    //   // const orderResponse = await addOrderMutation.mutateAsync(authToken!);
 
-      if (!orderResponse?.content?.id) {
-        throw new Error('Failed to create order - no order ID returned');
-      }
+    //   if (!orderResponse?.content?.id) {
+    //     throw new Error('Failed to create order - no order ID returned');
+    //   }
 
-      const orderId = orderResponse.content.id;
-      // Step 2: Add Items to Order (useAddItemToOrder)
-      setOrderingStatus((prev) => ({
-        ...prev,
-        currentStep: 'Adding Items to Order...',
-        currentStepNumber: 2,
-      }));
+    //   const orderId = orderResponse.content.id;
+    //   // Step 2: Add Items to Order (useAddItemToOrder)
+    //   setOrderingStatus((prev) => ({
+    //     ...prev,
+    //     currentStep: 'Adding Items to Order...',
+    //     currentStepNumber: 2,
+    //   }));
 
+    //   for (let i = 0; i < cartItems.length; i++) {
+    //     const item = cartItems[i];
+    //     // Update status for each item
+    //     setOrderingStatus((prev) => ({
+    //       ...prev,
+    //       processedItems: i,
+    //       currentStep: `Adding Item ${i + 1}/${cartItems.length}: ${item.name}...`,
+    //     }));
 
-      for (let i = 0; i < cartItems.length; i++) {
-        const item = cartItems[i];
-        // Update status for each item
-        setOrderingStatus((prev) => ({
-          ...prev,
-          processedItems: i,
-          currentStep: `Adding Item ${i + 1}/${cartItems.length}: ${item.name}...`,
-        }));
+    //     // const itemPayload = {
+    //     //   cproduct: item.sku,
+    //     //   ctax: '0',
+    //     //   tqty: item.qty.toString(),
+    //     //   tdiscount: '0',
+    //     //   tshipping: item.pickup === "1" ? '0' : item.shipping.toString(),
+    //     // };
 
-        // const itemPayload = {
-        //   cproduct: item.sku,
-        //   ctax: '0',
-        //   tqty: item.qty.toString(),
-        //   tdiscount: '0',
-        //   tshipping: item.pickup === "1" ? '0' : item.shipping.toString(),
-        // };
+    //     // try {
+    //     //   // const itemResponse = await addItemToOrderMutation.mutateAsync({
+    //     //   //   orderId,
+    //     //   //   data: itemPayload,
+    //     //   //   authToken: authToken!,
+    //     //   // });
 
+    //     // } catch (itemError: any) {
+    //     //   throw new Error(`Failed to add item "${item.name}" to order: ${itemError.message}`);
+    //     // }
+    //   }
 
-        // try {
-        //   // const itemResponse = await addItemToOrderMutation.mutateAsync({
-        //   //   orderId,
-        //   //   data: itemPayload,
-        //   //   authToken: authToken!,
-        //   // });
+    //   // Update status for final processed items
+    //   setOrderingStatus((prev) => ({
+    //     ...prev,
+    //     processedItems: cartItems.length,
+    //   }));
 
-        // } catch (itemError: any) {
-        //   throw new Error(`Failed to add item "${item.name}" to order: ${itemError.message}`);
-        // }
-      }
+    //   // Step 3: Checkout Order (useCheckoutOrder)
+    //   setOrderingStatus((prev) => ({
+    //     ...prev,
+    //     currentStep: 'Processing Checkout...',
+    //     currentStepNumber: 3,
+    //   }));
+    //   const checkoutResponse = await checkoutOrderMutation.mutateAsync({
+    //     orderId,
+    //     authToken: authToken!,
+    //   });
+    //   // Reset ordering status
+    //   setOrderingStatus({
+    //     isOrdering: false,
+    //     currentStep: '',
+    //     totalSteps: 3,
+    //     currentStepNumber: 0,
+    //     processedItems: 0,
+    //     totalItems: 0,
+    //   });
 
-      // Update status for final processed items
-      setOrderingStatus((prev) => ({
-        ...prev,
-        processedItems: cartItems.length,
-      }));
+    //   // Check if we have an invoice_url in the response
+    //   if (checkoutResponse?.content?.invoice_url) {
+    //     // Clear cart after successful order
+    //     await removeAllFromCartMutation.mutateAsync(authToken!);
+    //     refetchCart();
 
-      // Step 3: Checkout Order (useCheckoutOrder)
-      setOrderingStatus((prev) => ({
-        ...prev,
-        currentStep: 'Processing Checkout...',
-        currentStepNumber: 3,
-      }));
-      const checkoutResponse = await checkoutOrderMutation.mutateAsync({
-        orderId,
-        authToken: authToken!,
-      });
-      // Reset ordering status
-      setOrderingStatus({
-        isOrdering: false,
-        currentStep: '',
-        totalSteps: 3,
-        currentStepNumber: 0,
-        processedItems: 0,
-        totalItems: 0,
-      });
+    //     // Navigate to invoice page with the invoice_url
+    //     navigate('/invoice', {
+    //       state: {
+    //         invoiceUrl: checkoutResponse.content.invoice_url,
+    //         orderId: checkoutResponse.content.orderid || orderId,
+    //         transId: checkoutResponse.content.transid,
+    //         orderPayment: orderId,
+    //       },
+    //     });
+    //     return;
+    //   }
 
-      // Check if we have an invoice_url in the response
-      if (checkoutResponse?.content?.invoice_url) {
-        // Clear cart after successful order
-        await removeAllFromCartMutation.mutateAsync(authToken!);
-        refetchCart();
+    //   // Show success message if no invoice_url (fallback)
+    //   toast.success(`Pesanan #${orderId} telah dibuat dan sedang diproses.`, {
+    //     position: 'bottom-right',
+    //     autoClose: 1500,
+    //     theme: 'dark',
+    //   });
+    //   // Clear cart after successful order
+    //   await removeAllFromCartMutation.mutateAsync(authToken!);
+    //   refetchCart();
 
-        // Navigate to invoice page with the invoice_url
-        navigate('/invoice', {
-          state: {
-            invoiceUrl: checkoutResponse.content.invoice_url,
-            orderId: checkoutResponse.content.orderid || orderId,
-            transId: checkoutResponse.content.transid,
-            orderPayment: orderId,
-          },
-        });
-        return;
-      }
+    //   // Navigate to orders page or home
+    //   navigate('/orders');
+    // } catch (error: any) {
+    //   console.error('❌ Order process failed:', error);
 
-      // Show success message if no invoice_url (fallback)
-      toast.success(`Pesanan #${orderId} telah dibuat dan sedang diproses.`, {
-        position: 'bottom-right',
-        autoClose: 1500,
-        theme: 'dark',
-      });
-      // Clear cart after successful order
-      await removeAllFromCartMutation.mutateAsync(authToken!);
-      refetchCart();
+    //   setOrderingStatus((prev) => ({
+    //     ...prev,
+    //     isOrdering: false,
+    //     error: error.message,
+    //   }));
 
-      // Navigate to orders page or home
-      navigate('/orders');
-    } catch (error: any) {
-      console.error('❌ Order process failed:', error);
-
-      setOrderingStatus((prev) => ({
-        ...prev,
-        isOrdering: false,
-        error: error.message,
-      }));
-
-      toast.error(error.message || 'Gagal melakukan pemesanan. Silakan coba lagi.', {
-        position: 'bottom-right',
-        autoClose: 1500,
-        theme: 'dark',
-      });
-    }
+    //   toast.error(error.message || 'Gagal melakukan pemesanan. Silakan coba lagi.', {
+    //     position: 'bottom-right',
+    //     autoClose: 1500,
+    //     theme: 'dark',
+    //   });
+    // }
   };
 
   const hasApiCartItems = apiCartData?.content?.result && apiCartData.content.result.length > 0;
@@ -899,7 +903,7 @@ const Cart: React.FC = () => {
                           <MdAdd />
                         </div>
                       </div>
-                      
+
                       <div
                         className="remove-btn-inline"
                         onClick={() => handleRemoveItem(item.id)}
@@ -923,7 +927,7 @@ const Cart: React.FC = () => {
           {/* Pickup Options Section */}
           <div className="pickup-options-section">
             <h3>Opsi Pengiriman</h3>
-            
+
             {/* Global Pickup Options */}
             <div className="pickup-global-options">
               <div className="pickup-radio-group">
@@ -931,25 +935,31 @@ const Cart: React.FC = () => {
                   <input
                     type="radio"
                     name="pickup-global"
-                    checked={apiCartData?.content?.result?.every(item => item.pickup === "1") || false}
+                    checked={
+                      apiCartData?.content?.result?.every((item) => item.pickup === '1') || false
+                    }
                     onChange={() => handlePickupToggle(true)}
                     className="pickup-radio-input"
                   />
                   <span className="pickup-radio-label">Ambil Sendiri</span>
                   <span className="pickup-radio-desc">Gratis - Untuk semua produk</span>
                 </label>
-                
+
                 <label className="pickup-radio-option">
                   <input
                     type="radio"
                     name="pickup-global"
-                    checked={apiCartData?.content?.result?.every(item => item.pickup === "0") || false}
+                    checked={
+                      apiCartData?.content?.result?.every((item) => item.pickup === '0') || false
+                    }
                     onChange={() => handlePickupToggle(false)}
                     className="pickup-radio-input"
                   />
                   <span className="pickup-radio-label">Pakai Ongkir</span>
                   <span className="pickup-radio-desc">
-                    {shippingCost > 0 ? `Rp ${shippingCost.toLocaleString('id-ID')} - Untuk semua produk` : 'Untuk semua produk'}
+                    {shippingCost > 0
+                      ? `Rp ${shippingCost.toLocaleString('id-ID')} - Untuk semua produk`
+                      : 'Untuk semua produk'}
                   </span>
                 </label>
               </div>
@@ -962,8 +972,8 @@ const Cart: React.FC = () => {
                 {apiCartData?.content?.result?.map((item) => (
                   <div key={item.id} className="pickup-item-display">
                     <div className="pickup-item-info">
-                      <img 
-                        src={item.image || '/nodata.png'} 
+                      <img
+                        src={item.image || '/nodata.png'}
                         alt={item.name}
                         className="pickup-item-image"
                         onError={(e) => {
@@ -975,10 +985,14 @@ const Cart: React.FC = () => {
                         <h4 className="pickup-item-name">{item.name.toUpperCase()}</h4>
                         <p className="pickup-item-qty">Qty: {item.qty}</p>
                         <p className="pickup-item-status">
-                          Status: {item.pickup === "1" ? 
-                            <span className="status-pickup">📦 Ambil Sendiri</span> : 
-                            <span className="status-shipping">🚚 Kirim (Rp {item.shipping.toLocaleString('id-ID')})</span>
-                          }
+                          Status:{' '}
+                          {item.pickup === '1' ? (
+                            <span className="status-pickup">📦 Ambil Sendiri</span>
+                          ) : (
+                            <span className="status-shipping">
+                              🚚 Kirim (Rp {item.shipping.toLocaleString('id-ID')})
+                            </span>
+                          )}
                         </p>
                       </div>
                     </div>
@@ -992,19 +1006,18 @@ const Cart: React.FC = () => {
           <div className="order-summary">
             <h3>Ringkasan Pesanan</h3>
             <div className="summary-details">
-              
               <div className="summary-row">
                 <span>Subtotal ({apiCartCount} item)</span>
                 <span>Rp {subtotal.toLocaleString('id-ID')}</span>
               </div>
-              
+
               {shippingCost > 0 && (
                 <div className="summary-row">
                   <span>Biaya Pengiriman</span>
                   <span>Rp {shippingCost.toLocaleString('id-ID')}</span>
                 </div>
               )}
-              
+
               {costFromToken > 0 && (
                 <div className="summary-row">
                   <span>Biaya Layanan</span>

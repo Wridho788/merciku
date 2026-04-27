@@ -150,6 +150,7 @@ const Dashboard: React.FC = () => {
     error: latestProductsError,
     refetch: latestProductsRefetch,
   } = useLatestProducts();
+  
 
   // Panggil useBestSellerProducts hook
   const {
@@ -164,9 +165,9 @@ const Dashboard: React.FC = () => {
 
   // Check if Partnership should be displayed
   const shouldShowPartnership =
-    sliderData?.content?.result &&
-    Array.isArray(sliderData.content.result) &&
-    sliderData.content.result.length > 0;
+    sliderData?.result &&
+    Array.isArray(sliderData.result) &&
+    sliderData.result.length > 0;
 
   // Check if UpcomingNews should be displayed
   const shouldShowUpcomingNews =
@@ -405,20 +406,27 @@ const Dashboard: React.FC = () => {
   // Log latest products API data
   useEffect(() => {
     if (latestProductsData) {
+      console.log('Latest Products API Response:', latestProductsData);
     }
     if (latestProductsError) {
+      console.error('Latest Products API Error:', latestProductsError);
     }
     if (latestProductsLoading) {
+      console.log('Latest Products API Loading...');
     }
   }, [latestProductsData, latestProductsError, latestProductsLoading]);
 
   // Log best seller products API data
   useEffect(() => {
     if (bestSellerProductsData) {
+      console.log('Best Seller Products API Response:', bestSellerProductsData);
     }
     if (bestSellerProductsError) {
+      console.error('Best Seller Products API Error:', bestSellerProductsError);
     }
+
     if (bestSellerProductsLoading) {
+      console.log('Best Seller Products API Loading...');
     }
   }, [bestSellerProductsData, bestSellerProductsError, bestSellerProductsLoading]);
   const getApiCartCount = () => {

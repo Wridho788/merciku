@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { BASE_URL, ENDPOINT_CART, ENDPOINT_CART_ADD, ENDPOINT_CART_CLEAN, ENDPOINT_CART_SET_PICKUP } from './constants';
-import { isShippingAddressRequiredError, logErrorDetails } from '../utils/errorUtils';
+import { BASE_URL, ENDPOINT_CART, 
+  // ENDPOINT_CART_ADD, 
+  ENDPOINT_CART_CLEAN, ENDPOINT_CART_SET_PICKUP } from './constants';
+// import { isShippingAddressRequiredError, logErrorDetails } from '../utils/errorUtils';
 
 // TypeScript interfaces for Cart API
 export interface CartItem {
@@ -78,37 +80,37 @@ export const cartApi = {
   },
 
   // Add to Cart - POST method with FormData
-  async addToCart(payload: AddToCartRequest, authToken: string): Promise<AddToCartResponse> {
-    try {
-      // Create FormData
-      const formData = new FormData();
-      formData.append('sku', payload.sku);
-      formData.append('qty', payload.qty);
+  // async addToCart(payload: AddToCartRequest, authToken: string): Promise<AddToCartResponse> {
+  //   try {
+  //     // Create FormData
+  //     const formData = new FormData();
+  //     formData.append('sku', payload.sku);
+  //     formData.append('qty', payload.qty);
 
-      const response = await axios.post(`${BASE_URL}${ENDPOINT_CART_ADD}`, formData, {
-        headers: {
-          'X-auth-token': authToken,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        timeout: 30000
-      });
-      return response.data;
-    } catch (error) {
-      console.error('❌ Add to cart API error:', error);
-      if (axios.isAxiosError(error)) {
-        // Enhanced error logging for debugging
-        logErrorDetails(error, 'Cart API - Add to Cart');
+  //     const response = await axios.post(`${BASE_URL}${ENDPOINT_CART_ADD}`, formData, {
+  //       headers: {
+  //         'X-auth-token': authToken,
+  //         'Content-Type': 'application/x-www-form-urlencoded'
+  //       },
+  //       timeout: 30000
+  //     });
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error('❌ Add to cart API error:', error);
+  //     if (axios.isAxiosError(error)) {
+  //       // Enhanced error logging for debugging
+  //       logErrorDetails(error, 'Cart API - Add to Cart');
         
-        // For error 307 (shipping address required), preserve the original error structure
-        if (isShippingAddressRequiredError(error)) {
-          throw error; // Throw the original axios error to preserve all error details
-        }
+  //       // For error 307 (shipping address required), preserve the original error structure
+  //       if (isShippingAddressRequiredError(error)) {
+  //         throw error; // Throw the original axios error to preserve all error details
+  //       }
         
-        throw new Error(error.response?.data?.message || error.message || 'Failed to add item to cart');
-      }
-      throw error;
-    }
-  },
+  //       throw new Error(error.response?.data?.message || error.message || 'Failed to add item to cart');
+  //     }
+  //     throw error;
+  //   }
+  // },
 
   // Remove from Cart - GET method (clean cart)
   async removeFromCart(authToken: string): Promise<RemoveFromCartResponse> {

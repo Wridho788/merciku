@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { MdOpenInNew } from 'react-icons/md';
 import { AppbarDefault } from '../components/AppbarDefault';
@@ -19,7 +19,7 @@ const Invoice: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error] = useState<string | null>(null);
   const { isAuthenticated } = useAuthStore();
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  // const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Get invoice data from navigation state
   const invoiceData = location.state as InvoiceState;
@@ -51,15 +51,15 @@ const Invoice: React.FC = () => {
       return;
     }
     // Polling setiap 3 detik
-    intervalRef.current = setInterval(() => {
-      refetch();
-    }, 3000);
+    // intervalRef.current = setInterval(() => {
+    //   refetch();
+    // }, 3000);
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      // if (intervalRef.current) {
+      //   clearInterval(intervalRef.current);
+      //   intervalRef.current = null;
+      // }
     };
   }, [invoiceData?.orderPayment, isAuthenticated, refetch]);
 
@@ -67,10 +67,10 @@ const Invoice: React.FC = () => {
   useEffect(() => {
     if (orderDetail?.content?.status === 'SUCCESSFUL') {
       // Hentikan polling
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      // if (intervalRef.current) {
+      //   clearInterval(intervalRef.current);
+      //   intervalRef.current = null;
+      // }
       
       // Navigasi ke halaman order detail
       navigate(`/orders/${invoiceData?.orderPayment}`);

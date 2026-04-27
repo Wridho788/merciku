@@ -199,17 +199,17 @@ export function useProfile(): UseQueryResult<GetProfileResponse, Error> {
   });
 }
 
-export function useCustomerById(customerId: string): UseQueryResult<GetProfileResponse, Error> {
-  const { token, isAuthenticated } = useAuthStore();
+// export function useCustomerById(customerId: string): UseQueryResult<GetProfileResponse, Error> {
+//   const { token, isAuthenticated } = useAuthStore();
 
-  return useQuery({
-    queryKey: ['customer', customerId, token],
-    queryFn: () => customerApi.getCustomerById(customerId, token!),
-    enabled: isAuthenticated && !!customerId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 2,
-  });
-}
+//   return useQuery({
+//     queryKey: ['customer', customerId, token],
+//     queryFn: () => customerApi.getCustomerById(customerId, token!),
+//     enabled: isAuthenticated && !!customerId,
+//     staleTime: 1000 * 60 * 5, // 5 minutes
+//     retry: 2,
+//   });
+// }
 
 export function useDecodeToken(): UseQueryResult<DecodeTokenResponse, Error> {
   const { token, isAuthenticated } = useAuthStore();

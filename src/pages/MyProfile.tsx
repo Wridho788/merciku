@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AppbarDefault } from '../components/AppbarDefault';
 import { FAB } from '../components/FAB';
-import { useProfile, useUpdateProfile, useUploadImage, useCity, useCart } from '../api/hooks/index';
+import { useProfile, useUpdateProfile, useUploadImage,
+  //  useCity,
+    useCart } from '../api/hooks/index';
 import { useAuthStore } from '../stores/authStore';
 import './AccountPages.css';
 
@@ -50,7 +52,7 @@ const MyProfile: React.FC = () => {
   } = useProfile();
   const updateProfileMutation = useUpdateProfile();
   const uploadImageMutation = useUploadImage();
-  const { data: cityData, isLoading: cityLoading, error: cityError } = useCity();
+  // const { data: cityData, isLoading: cityLoading, error: cityError } = useCity();
   // API hooks for cart
   const {
     data: apiCartData,
@@ -546,7 +548,7 @@ navigate('/cart');  };
                 </div>
                 <div className="form-group">
                   <label>Kota</label>
-                  <select
+                  {/* <select
                     value={formData.ccity}
                     onChange={(e) => handleInputChange('ccity', e.target.value)}
                     disabled={cityLoading}
@@ -602,7 +604,7 @@ navigate('/cart');  };
                           );
                         });
                       })()}
-                  </select>
+                  </select> */}
                 </div>
                 <div className="form-group">
                   <label>Profesi</label>

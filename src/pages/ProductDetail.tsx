@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-  MdShoppingCart,
+  // MdShoppingCart,
   MdStar,
   MdAdd,
   MdRemove,
@@ -15,13 +15,13 @@ import { AppbarDefault } from '../components/AppbarDefault';
 import { FAB } from '../components/FAB';
 import SEO from '../components/SEO';
 import { generateBreadcrumbs, formatPrice, truncateText, stripHtml } from '../utils/seoUtils';
-import { useCart as useCartContext } from '../contexts/CartContext';
-import { useProductDetail, useAddToCart, useCart } from '../api/hooks/index';
-import { useAuthStore } from '../stores/authStore';
+// import { useCart as useCartContext } from '../contexts/CartContext';
+import { useProductDetail, useCart } from '../api/hooks/index';
+// import { useAuthStore } from '../stores/authStore';
 import { extractIdFromParam } from '../api/codeMapping';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import AturPengiriman from '../components/AturPengiriman';
-import { isShippingAddressRequiredError, logErrorDetails, getErrorMessage, isAuthenticationError } from '../utils/errorUtils';
+// import { isShippingAddressRequiredError, logErrorDetails, getErrorMessage, isAuthenticationError } from '../utils/errorUtils';
 import './ProductDetail.css';
 
 interface ProductDetailType {
@@ -49,15 +49,17 @@ const ProductDetail: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [isShippingModalOpen, setIsShippingModalOpen] = useState(false);
-  const { addToCart } = useCartContext();
+  // const { addToCart } = useCartContext();
   // API hooks for cart
-  const { data: apiCartData, refetch: cartRefetch } = useCart();
+  const { data: apiCartData, 
+    // refetch: cartRefetch 
+  } = useCart();
 
   // Extract actual product ID from URL parameter (handles both old ID format and new SEO format)
   const productId = productParam ? extractIdFromParam(productParam) : null;
 
   // Auth state - get all needed auth properties
-  const { isAuthenticated, token, validateToken, requireAuth } = useAuthStore();
+  // const { isAuthenticated, token, validateToken, requireAuth } = useAuthStore();
 
   // Scroll to top on component mount
   useEffect(() => {
@@ -85,7 +87,7 @@ const ProductDetail: React.FC = () => {
   } = useProductDetail(productId || '');
 
   // Add to cart mutation hook
-  const addToCartMutation = useAddToCart();
+  // const addToCartMutation = useAddToCart();
 
   // Log the response to console
   useEffect(() => {
@@ -444,128 +446,128 @@ const ProductDetail: React.FC = () => {
     }
   };
 
-  const handleAddToCart = async () => {
-    // Enhanced authentication check using authStore methods
-    const isTokenValid = validateToken();
+  // const handleAddToCart = async () => {
+  //   // Enhanced authentication check using authStore methods
+  //   const isTokenValid = validateToken();
 
-    if (!isAuthenticated || !token || !isTokenValid) {
-      toast.warning('Please login to add items to cart', {
-        position: 'bottom-right',
-        autoClose: 1500,
-        theme: 'dark',
-      });
-      navigate('/login');
-      return;
-    }
+  //   if (!isAuthenticated || !token || !isTokenValid) {
+  //     toast.warning('Please login to add items to cart', {
+  //       position: 'bottom-right',
+  //       autoClose: 1500,
+  //       theme: 'dark',
+  //     });
+  //     navigate('/login');
+  //     return;
+  //   }
 
-    // Use requireAuth method from authStore for additional validation
-    const canProceed = requireAuth(() => {
-      // This callback will only execute if authentication is valid
-      console.log('✅ Authentication verified, proceeding with add to cart');
-    }, 'add items to cart');
+  //   // Use requireAuth method from authStore for additional validation
+  //   const canProceed = requireAuth(() => {
+  //     // This callback will only execute if authentication is valid
+  //     console.log('✅ Authentication verified, proceeding with add to cart');
+  //   }, 'add items to cart');
 
-    if (!canProceed) {
-      navigate('/login');
-      return;
-    }
+  //   if (!canProceed) {
+  //     navigate('/login');
+  //     return;
+  //   }
 
-    try {
-      // Get the SKU from the API data or use the product ID as fallback
-      const productSku = productDetailData?.content?.sku || productData.id;
+  //   try {
+  //     // Get the SKU from the API data or use the product ID as fallback
+  //     const productSku = productDetailData?.content?.sku || productData.id;
 
-      // Check if item already exists in cart
-      const existingItem = apiCartData?.content?.result?.find(item => item.sku === productSku);
-      const newQuantity = existingItem ? existingItem.qty + quantity : quantity;
+  //     // Check if item already exists in cart
+  //     // const existingItem = apiCartData?.content?.result?.find(item => item.sku === productSku);
+  //     // const newQuantity = existingItem ? existingItem.qty + quantity : quantity;
 
-      // Add to cart using API with cumulative quantity
-      await addToCartMutation.mutateAsync({
-        data: {
-          sku: productSku,
-          qty: newQuantity.toString(),
-        },
-      });
+  //     // Add to cart using API with cumulative quantity
+  //     // await addToCartMutation.mutateAsync({
+  //     //   data: {
+  //     //     sku: productSku,
+  //     //     qty: newQuantity.toString(),
+  //     //   },
+  //     // });
 
-      // Show success message with toast
-      toast.success(`${quantity} ${productData.title.toUpperCase()} added to cart successfully`, {
-        position: 'bottom-right',
-        autoClose: 1500,
-        theme: 'dark',
-      });
-      cartRefetch();
+  //     // Show success message with toast
+  //     toast.success(`${quantity} ${productData.title.toUpperCase()} added to cart successfully`, {
+  //       position: 'bottom-right',
+  //       autoClose: 1500,
+  //       theme: 'dark',
+  //     });
+  //     cartRefetch();
       
-      // Also add to cart context for immediate UI update
-      addToCart(
-        {
-          id: productData.id,
-          title: productData.title,
-          price: productData.price,
-          image: productData.image,
-        },
-        quantity,
-      );
+  //     // Also add to cart context for immediate UI update
+  //     addToCart(
+  //       {
+  //         id: productData.id,
+  //         title: productData.title,
+  //         price: productData.price,
+  //         image: productData.image,
+  //       },
+  //       quantity,
+  //     );
 
-      // Reset quantity to 1 after adding to cart
-      setQuantity(1);
-    } catch (error: any) {
-      console.error('Failed to add to cart:', error);
+  //     // Reset quantity to 1 after adding to cart
+  //     setQuantity(1);
+  //   } catch (error: any) {
+  //     console.error('Failed to add to cart:', error);
       
-      // Enhanced error logging for debugging
-      logErrorDetails(error, 'Add to Cart');
+  //     // Enhanced error logging for debugging
+  //     logErrorDetails(error, 'Add to Cart');
 
-      // Check if error is 307 - Shipping address required
-      if (isShippingAddressRequiredError(error)) {
-        toast.warning('Please set your shipping address first', {
-          position: 'bottom-right',
-          autoClose: 1500,
-          theme: 'dark',
-        });
-        setIsShippingModalOpen(true);
-        return;
-      }
+  //     // Check if error is 307 - Shipping address required
+  //     if (isShippingAddressRequiredError(error)) {
+  //       toast.warning('Please set your shipping address first', {
+  //         position: 'bottom-right',
+  //         autoClose: 1500,
+  //         theme: 'dark',
+  //       });
+  //       setIsShippingModalOpen(true);
+  //       return;
+  //     }
 
-      // Check if error is related to authentication
-      if (isAuthenticationError(error)) {
-        const authErrorMessage = 'Your session has expired. Please login again.';
-        toast.warning(authErrorMessage, {
-          position: 'bottom-right',
-          autoClose: 1500,
-          theme: 'dark',
-        });
-        // Logout and redirect to login
-        useAuthStore.getState().logout();
-        navigate('/login');
-        return;
-      }
+  //     // Check if error is related to authentication
+  //     if (isAuthenticationError(error)) {
+  //       const authErrorMessage = 'Your session has expired. Please login again.';
+  //       toast.warning(authErrorMessage, {
+  //         position: 'bottom-right',
+  //         autoClose: 1500,
+  //         theme: 'dark',
+  //       });
+  //       // Logout and redirect to login
+  //       useAuthStore.getState().logout();
+  //       navigate('/login');
+  //       return;
+  //     }
 
-      // Handle timeout errors specifically
-      if (error?.message?.includes('timeout') || error?.code === 'ECONNABORTED') {
-        toast.error('Koneksi timeout. Silakan periksa koneksi internet dan coba lagi.', {
-          position: 'bottom-right',
-          autoClose: 1500,
-          theme: 'dark',
-        });
-        return;
-      }
+  //     // Handle timeout errors specifically
+  //     if (error?.message?.includes('timeout') || error?.code === 'ECONNABORTED') {
+  //       toast.error('Koneksi timeout. Silakan periksa koneksi internet dan coba lagi.', {
+  //         position: 'bottom-right',
+  //         autoClose: 1500,
+  //         theme: 'dark',
+  //       });
+  //       return;
+  //     }
 
-      // Handle network errors
-      if (error?.message?.includes('Network Error') || error?.code === 'ERR_NETWORK') {
-        toast.error('Gagal terhubung ke server. Periksa koneksi internet Anda.', {
-          position: 'bottom-right',
-          autoClose: 1500,
-          theme: 'dark',
-        });
-        return;
-      }
+  //     // Handle network errors
+  //     if (error?.message?.includes('Network Error') || error?.code === 'ERR_NETWORK') {
+  //       toast.error('Gagal terhubung ke server. Periksa koneksi internet Anda.', {
+  //         position: 'bottom-right',
+  //         autoClose: 1500,
+  //         theme: 'dark',
+  //       });
+  //       return;
+  //     }
 
-      // Handle other errors
-      const errorMessage = getErrorMessage(error) || 'Gagal menambahkan ke keranjang. Silakan coba lagi.';
-      toast.error(`${errorMessage}`, {
-        position: 'bottom-right',
-        autoClose: 1500,
-        theme: 'dark',
-      });
-    }
-  };
+  //     // Handle other errors
+  //     const errorMessage = getErrorMessage(error) || 'Gagal menambahkan ke keranjang. Silakan coba lagi.';
+  //     toast.error(`${errorMessage}`, {
+  //       position: 'bottom-right',
+  //       autoClose: 1500,
+  //       theme: 'dark',
+  //     });
+  //   }
+  // };
 
   const renderStars = (rating: number) => {
     const stars = [];
@@ -937,7 +939,7 @@ const ProductDetail: React.FC = () => {
             </div>
 
             <div className="action-buttons">
-              <button
+              {/* <button
                 className="add-to-cart-btn"
                 onClick={handleAddToCart}
                 disabled={productData.stock === 0 || addToCartMutation.isPending}
@@ -953,7 +955,7 @@ const ProductDetail: React.FC = () => {
                     'Tambah ke Keranjang'
                   )}
                 </span>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

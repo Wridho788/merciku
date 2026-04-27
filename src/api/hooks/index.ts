@@ -11,7 +11,7 @@ export {
   useUpdateProfile,
   useChangePassword,
   useProfile,
-  useCustomerById,
+  // useCustomerById,
   useDecodeToken,
   useNotifications,
   useUnreadNotifications,
@@ -23,13 +23,9 @@ export {
 // Event & Chapter Management Hooks
 export {
   usePostEvent,
-  usePostFrontEvent,
-  useEventById,
-  useEventsByCustomer,
   usePostArticle,
   useChapters,
   useChapterById,
-  useChaptersByCustomer,
   useFrontChapters,
   useMerchantRegistration,
   usePublicRegistration,
@@ -52,12 +48,9 @@ export {
 // Cart & Order Management Hooks
 export {
   useCart,
-  useAddToCart,
   useRemoveFromCart,
   useSetPickup,
   useOrders,
-  useAddOrder,
-  useAddItemToOrder,
   useCheckoutOrder,
   useOrderDetail,
 } from './cartHooks';
@@ -67,9 +60,14 @@ export {
   useLedger,
   useSlider,
   useSplash,
-  useCity,
-  useCityList,
 } from './generalHooks';
+// Shipping/location hooks
+export {
+  useProvince,
+  useCityByProvince,
+  useDistrictByCity,
+  useSetShipping,
+} from './shippingHooks';
 
 // Type exports for convenience
 export type {

@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { BASE_URL, ENDPOINT_ORDER, ENDPOINT_ORDER_ADD, ENDPOINT_ORDER_ADD_ITEM, ENDPOINT_ORDER_CHECKOUT, ENDPOINT_ORDER_GET, ENDPOINT_ORDER_TRACKING } from './constants';
+import { BASE_URL, ENDPOINT_ORDER,
+  //  ENDPOINT_ORDER_ADD, ENDPOINT_ORDER_ADD_ITEM, 
+   ENDPOINT_ORDER_CHECKOUT, ENDPOINT_ORDER_GET, ENDPOINT_ORDER_TRACKING } from './constants';
 import { type UseQueryResult, useQuery, type UseMutationResult, useMutation } from '@tanstack/react-query';
 
 // TypeScript interfaces for Order API
@@ -239,61 +241,61 @@ export const orderApi = {
   },
 
   // Add Order - POST method with FormData
-  async addOrder(authToken: string): Promise<OrderAddResponse> {
-    try {
-      // Create empty FormData for order creation
-      const formData = new FormData();
+  // async addOrder(authToken: string): Promise<OrderAddResponse> {
+  //   try {
+  //     // Create empty FormData for order creation
+  //     const formData = new FormData();
 
-      const response = await axios.post(`${BASE_URL}${ENDPOINT_ORDER_ADD}`, formData, {
-        headers: {
-          'X-auth-token': authToken,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        timeout: 10000
-      });
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.message || error.message || 'Failed to add order');
-      }
-      throw error;
-    }
-  },
+  //     const response = await axios.post(`${BASE_URL}${ENDPOINT_ORDER_ADD}`, formData, {
+  //       headers: {
+  //         'X-auth-token': authToken,
+  //         'Content-Type': 'application/x-www-form-urlencoded'
+  //       },
+  //       timeout: 10000
+  //     });
+  //     return response.data;
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       throw new Error(error.response?.data?.message || error.message || 'Failed to add order');
+  //     }
+  //     throw error;
+  //   }
+  // },
 
   // Add Item to Order - POST method with FormData
-  async addItemToOrder(
-    orderId: string,
-    payload: OrderAddItemRequest,
-    authToken: string
-  ): Promise<OrderAddItemResponse> {
-    try {
-      // Create FormData
-      const formData = new FormData();
-      formData.append('cproduct', payload.cproduct);
-      formData.append('ctax', payload.ctax);
-      formData.append('tqty', payload.tqty);
-      formData.append('tdiscount', payload.tdiscount);
-      formData.append('tshipping', payload.tshipping);
+  // async addItemToOrder(
+  //   orderId: string,
+  //   payload: OrderAddItemRequest,
+  //   authToken: string
+  // ): Promise<OrderAddItemResponse> {
+  //   try {
+  //     // Create FormData
+  //     const formData = new FormData();
+  //     formData.append('cproduct', payload.cproduct);
+  //     formData.append('ctax', payload.ctax);
+  //     formData.append('tqty', payload.tqty);
+  //     formData.append('tdiscount', payload.tdiscount);
+  //     formData.append('tshipping', payload.tshipping);
 
-      const response = await axios.post(`${BASE_URL}${ENDPOINT_ORDER_ADD_ITEM}${orderId}`, formData, {
-        headers: {
-          'X-auth-token': authToken,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        timeout: 10000
-      });
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        // Handle specific 404 error
-        if (error.response?.status === 404) {
-          throw new Error(error.response?.data?.error || 'ID not found');
-        }
-        throw new Error(error.response?.data?.message || error.message || 'Failed to add item to order');
-      }
-      throw error;
-    }
-  },
+  //     const response = await axios.post(`${BASE_URL}${ENDPOINT_ORDER_ADD_ITEM}${orderId}`, formData, {
+  //       headers: {
+  //         'X-auth-token': authToken,
+  //         'Content-Type': 'application/x-www-form-urlencoded'
+  //       },
+  //       timeout: 10000
+  //     });
+  //     return response.data;
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       // Handle specific 404 error
+  //       if (error.response?.status === 404) {
+  //         throw new Error(error.response?.data?.error || 'ID not found');
+  //       }
+  //       throw new Error(error.response?.data?.message || error.message || 'Failed to add item to order');
+  //     }
+  //     throw error;
+  //   }
+  // },
 
   // Checkout Order - GET method
   async checkoutOrder(orderId: string, authToken: string): Promise<OrderCheckoutResponse> {
@@ -417,50 +419,50 @@ export function useOrders(
   });
 }
 
-export function useAddOrder(): UseMutationResult<OrderAddResponse, Error, string> {
-  return useMutation({
-    mutationFn: async (authToken: string) => {
-      if (!authToken || authToken.trim() === '') {
-        throw new Error('Valid auth token is required for creating order');
-      }
-      try {
-        return await orderApi.addOrder(authToken);
-      } catch (error) {
-        throw error;
-      }
-    },
-  });
-}
+// export function useAddOrder(): UseMutationResult<OrderAddResponse, Error, string> {
+//   return useMutation({
+//     mutationFn: async (authToken: string) => {
+//       if (!authToken || authToken.trim() === '') {
+//         throw new Error('Valid auth token is required for creating order');
+//       }
+//       try {
+//         return await orderApi.addOrder(authToken);
+//       } catch (error) {
+//         throw error;
+//       }
+//     },
+//   });
+// }
 
-interface UseAddItemToOrderPayload {
-  orderId: string;
-  data: OrderAddItemRequest;
-  authToken: string;
-}
+// interface UseAddItemToOrderPayload {
+//   orderId: string;
+//   data: OrderAddItemRequest;
+//   authToken: string;
+// }
 
-export function useAddItemToOrder(): UseMutationResult<OrderAddItemResponse, Error, UseAddItemToOrderPayload> {
-  return useMutation({
-    mutationFn: async ({ orderId, data, authToken }: UseAddItemToOrderPayload) => {
-      if (!authToken || authToken.trim() === '') {
-        throw new Error('Valid auth token is required for adding item to order');
-      }
-      if (!orderId || orderId.trim() === '') {
-        throw new Error('Order ID is required');
-      }
-      if (!data.cproduct || data.cproduct.trim() === '') {
-        throw new Error('Product code is required');
-      }
-      if (!data.tqty || data.tqty.trim() === '') {
-        throw new Error('Quantity is required');
-      }
-      try {
-        return await orderApi.addItemToOrder(orderId, data, authToken);
-      } catch (error) {
-        throw error;
-      }
-    },
-  });
-}
+// export function useAddItemToOrder(): UseMutationResult<OrderAddItemResponse, Error, UseAddItemToOrderPayload> {
+//   return useMutation({
+//     mutationFn: async ({ orderId, data, authToken }: UseAddItemToOrderPayload) => {
+//       if (!authToken || authToken.trim() === '') {
+//         throw new Error('Valid auth token is required for adding item to order');
+//       }
+//       if (!orderId || orderId.trim() === '') {
+//         throw new Error('Order ID is required');
+//       }
+//       if (!data.cproduct || data.cproduct.trim() === '') {
+//         throw new Error('Product code is required');
+//       }
+//       if (!data.tqty || data.tqty.trim() === '') {
+//         throw new Error('Quantity is required');
+//       }
+//       try {
+//         return await orderApi.addItemToOrder(orderId, data, authToken);
+//       } catch (error) {
+//         throw error;
+//       }
+//     },
+//   });
+// }
 
 interface UseCheckoutOrderPayload {
   orderId: string;

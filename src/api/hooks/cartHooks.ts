@@ -6,16 +6,16 @@ import { cartApi } from '../cartApi';
 import { orderApi } from '../ordersApi';
 import type {
   CartResponse,
-  AddToCartRequest,
-  AddToCartResponse,
+  // AddToCartRequest,
+  // AddToCartResponse,
   RemoveFromCartResponse,
   SetPickupResponse,
 } from '../cartApi';
 import type {
   OrderListResponse,
-  OrderAddResponse,
-  OrderAddItemRequest,
-  OrderAddItemResponse,
+  // OrderAddResponse,
+  // OrderAddItemRequest,
+  // OrderAddItemResponse,
   OrderCheckoutResponse,
   OrderDetailResponse,
   OrderTrackingResponse,
@@ -34,39 +34,39 @@ export function useCart(): UseQueryResult<CartResponse, Error> {
   });
 }
 
-interface UseAddToCartPayload {
-  data: AddToCartRequest;
-}
+// interface UseAddToCartPayload {
+//   data: AddToCartRequest;
+// }
 
-export function useAddToCart(): UseMutationResult<AddToCartResponse, Error, UseAddToCartPayload> {
-  const { token } = useAuthStore();
+// export function useAddToCart(): UseMutationResult<AddToCartResponse, Error, UseAddToCartPayload> {
+//   const { token } = useAuthStore();
 
-  return useMutation({
-    mutationFn: async ({ data }: UseAddToCartPayload) => {
-      if (!data.sku || data.sku.trim() === '') {
-        throw new Error('SKU is required');
-      }
-      if (!data.qty || data.qty.trim() === '') {
-        throw new Error('Quantity is required');
-      }
-      try {
-        return await cartApi.addToCart(data, token!);
-      } catch (error) {
-        throw error;
-      }
-    },
-    retry: (failureCount, error) => {
-      // Retry only for timeout and network errors, max 2 retries
-      if (failureCount < 2) {
-        const isTimeoutError = error?.message?.includes('timeout') || error?.message?.includes('ECONNABORTED');
-        const isNetworkError = error?.message?.includes('Network Error') || error?.message?.includes('ERR_NETWORK');
-        return isTimeoutError || isNetworkError;
-      }
-      return false;
-    },
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
-  });
-}
+//   return useMutation({
+//     mutationFn: async ({ data }: UseAddToCartPayload) => {
+//       if (!data.sku || data.sku.trim() === '') {
+//         throw new Error('SKU is required');
+//       }
+//       if (!data.qty || data.qty.trim() === '') {
+//         throw new Error('Quantity is required');
+//       }
+//       try {
+//         return await cartApi.addToCart(data, token!);
+//       } catch (error) {
+//         throw error;
+//       }
+//     },
+//     retry: (failureCount, error) => {
+//       // Retry only for timeout and network errors, max 2 retries
+//       if (failureCount < 2) {
+//         const isTimeoutError = error?.message?.includes('timeout') || error?.message?.includes('ECONNABORTED');
+//         const isNetworkError = error?.message?.includes('Network Error') || error?.message?.includes('ERR_NETWORK');
+//         return isTimeoutError || isNetworkError;
+//       }
+//       return false;
+//     },
+//     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
+//   });
+// }
 
 export function useRemoveFromCart(): UseMutationResult<RemoveFromCartResponse, Error, string> {
   const { token } = useAuthStore();
@@ -130,52 +130,52 @@ export function useOrders(
   });
 }
 
-export function useAddOrder(): UseMutationResult<OrderAddResponse, Error, string> {
-  const { token } = useAuthStore();
+// export function useAddOrder(): UseMutationResult<OrderAddResponse, Error, string> {
+//   const { token } = useAuthStore();
 
-  return useMutation({
-    mutationFn: async () => {
-      try {
-        return await orderApi.addOrder(token!);
-      } catch (error) {
-        throw error;
-      }
-    },
-  });
-}
+//   return useMutation({
+//     mutationFn: async () => {
+//       try {
+//         return await orderApi.addOrder(token!);
+//       } catch (error) {
+//         throw error;
+//       }
+//     },
+//   });
+// }
 
-interface UseAddItemToOrderPayload {
-  orderId: string;
-  data: OrderAddItemRequest;
-  authToken: string;
-}
+// interface UseAddItemToOrderPayload {
+//   orderId: string;
+//   data: OrderAddItemRequest;
+//   authToken: string;
+// }
 
-export function useAddItemToOrder(): UseMutationResult<
-  OrderAddItemResponse,
-  Error,
-  UseAddItemToOrderPayload
-> {
-  const { token } = useAuthStore();
+// export function useAddItemToOrder(): UseMutationResult<
+//   OrderAddItemResponse,
+//   Error,
+//   UseAddItemToOrderPayload
+// > {
+//   const { token } = useAuthStore();
 
-  return useMutation({
-    mutationFn: async ({ orderId, data }: UseAddItemToOrderPayload) => {
-      if (!orderId || orderId.trim() === '') {
-        throw new Error('Order ID is required');
-      }
-      if (!data.cproduct || data.cproduct.trim() === '') {
-        throw new Error('Product code is required');
-      }
-      if (!data.tqty || data.tqty.trim() === '') {
-        throw new Error('Quantity is required');
-      }
-      try {
-        return await orderApi.addItemToOrder(orderId, data, token!);
-      } catch (error) {
-        throw error;
-      }
-    },
-  });
-}
+//   return useMutation({
+//     mutationFn: async ({ orderId, data }: UseAddItemToOrderPayload) => {
+//       if (!orderId || orderId.trim() === '') {
+//         throw new Error('Order ID is required');
+//       }
+//       if (!data.cproduct || data.cproduct.trim() === '') {
+//         throw new Error('Product code is required');
+//       }
+//       if (!data.tqty || data.tqty.trim() === '') {
+//         throw new Error('Quantity is required');
+//       }
+//       try {
+//         return await orderApi.addItemToOrder(orderId, data, token!);
+//       } catch (error) {
+//         throw error;
+//       }
+//     },
+//   });
+// }
 
 interface UseCheckoutOrderPayload {
   orderId: string;

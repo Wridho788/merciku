@@ -5,17 +5,13 @@ import {
   ENDPOINT_SLIDER,
   ENDPOINT_SPLASH,
   ENDPOINT_EVENT,
-  ENDPOINT_EVENT_FRONT,
   ENDPOINT_ARTICLE,
-  ENDPOINT_EVENT_BY_ID,
-  ENDPOINT_CITY_GET_CITY,
-  ENDPOINT_CITY_GET_PROVINCE,
-  ENDPOINT_CITY_GET_DISTRICT,
-  ENDPOINT_EVENT_GET_BY_CUSTOMER,
   ENDPOINT_EVENT_REGISTER_MERCHANT,
   ENDPOINT_EVENT_REGISTER_PUBLIC,
   ENDPOINT_EVENT_REGISTER,
-  ENDPOINT_CITY,
+  ENDPOINT_PROVINCE_SHIPPING,
+  ENDPOINT_GET_CITY,
+  ENDPOINT_DISTRICT_SHIPPING,
 } from './constants';
 
 export const getLedger = async (authToken: string) => {
@@ -32,7 +28,10 @@ export const getLedger = async (authToken: string) => {
 };
 
 export const getSlider = async () => {
-  const response = await axios.get(`${BASE_URL}${ENDPOINT_SLIDER}`);
+  const response = await axios.post(`${BASE_URL}${ENDPOINT_SLIDER}`, {
+    limit: '10',
+    offset: '0',
+  });
   return response.data;
 };
 
@@ -53,20 +52,20 @@ export const postEvent = async (data?: any) => {
   return response.data;
 };
 
-export const postFrontEvent = async (data?: any) => {
-  const defaultPayload = {
-    limit: 10,
-    offset: 0,
-  };
-  const payload = data ? { ...defaultPayload, ...data } : defaultPayload;
-  const response = await axios.post(`${BASE_URL}${ENDPOINT_EVENT_FRONT}`, payload);
-  return response.data;
-};
+// export const postFrontEvent = async (data?: any) => {
+//   const defaultPayload = {
+//     limit: 10,
+//     offset: 0,
+//   };
+//   const payload = data ? { ...defaultPayload, ...data } : defaultPayload;
+//   const response = await axios.post(`${BASE_URL}${ENDPOINT_EVENT_FRONT}`, payload);
+//   return response.data;
+// };
 
-export const getEventById = async (id: string) => {
-  const response = await axios.get(`${BASE_URL}${ENDPOINT_EVENT_BY_ID}${id}`);
-  return response.data;
-};
+// export const getEventById = async (id: string) => {
+//   const response = await axios.get(`${BASE_URL}${ENDPOINT_EVENT_BY_ID}${id}`);
+//   return response.data;
+// };
 
 export const postArticle = async (data?: any) => {
   const defaultPayload = { category: 24, limit: 10, offset: 0, orderby: '', order: 'asc' };
@@ -75,52 +74,52 @@ export const postArticle = async (data?: any) => {
   return response.data;
 };
 
-export const getCity = async () => {
-  const url = `${BASE_URL}${ENDPOINT_CITY_GET_CITY}`;
+// export const getCity = async () => {
+//   const url = `${BASE_URL}${ENDPOINT_CITY_GET_CITY}`;
 
-  const response = await axios.get(url);
-  return response.data;
-};
+//   const response = await axios.get(url);
+//   return response.data;
+// };
 
-export const getCityList = async () => {
-  const url = `${BASE_URL}${ENDPOINT_CITY}`;
-  
-  const response = await axios.get(url);
-  return response.data;
-};
+// export const getCityList = async () => {
+//   const url = `${BASE_URL}${ENDPOINT_CITY}`;
+
+//   const response = await axios.get(url);
+//   return response.data;
+// };
 
 export const getProvince = async () => {
-  const url = `${BASE_URL}${ENDPOINT_CITY_GET_PROVINCE}`;
+  const url = `${BASE_URL}${ENDPOINT_PROVINCE_SHIPPING}`;
   const response = await axios.get(url);
   return response.data;
 };
 
 export const getCityByProvince = async (provinceId: string) => {
-  const url = `${BASE_URL}${ENDPOINT_CITY_GET_CITY}${provinceId}`;
+  const url = `${BASE_URL}${ENDPOINT_GET_CITY}/${provinceId}`;
   const response = await axios.get(url);
   return response.data;
 };
 
 export const getDistrictByCity = async (cityId: string) => {
-  const url = `${BASE_URL}${ENDPOINT_CITY_GET_DISTRICT}${cityId}`;
+  const url = `${BASE_URL}${ENDPOINT_DISTRICT_SHIPPING}/${cityId}`;
   const response = await axios.get(url);
   return response.data;
 };
 
-export const getEventsByCustomer = async (authToken: string, data?: any) => {
-  const defaultPayload = {
-    limit: 30,
-    offset: 0,
-  };
-  const payload = data ? { ...defaultPayload, ...data } : defaultPayload;
+// export const getEventsByCustomer = async (authToken: string, data?: any) => {
+//   const defaultPayload = {
+//     limit: 30,
+//     offset: 0,
+//   };
+//   const payload = data ? { ...defaultPayload, ...data } : defaultPayload;
 
-  const response = await axios.post(`${BASE_URL}${ENDPOINT_EVENT_GET_BY_CUSTOMER}`, payload, {
-    headers: {
-      'X-auth-token': authToken,
-    },
-  });
-  return response.data;
-};
+//   const response = await axios.post(`${BASE_URL}${ENDPOINT_EVENT_GET_BY_CUSTOMER}`, payload, {
+//     headers: {
+//       'X-auth-token': authToken,
+//     },
+//   });
+//   return response.data;
+// };
 
 export const registerMerchant = async (authToken: string, formData: FormData) => {
   const response = await axios.post(`${BASE_URL}${ENDPOINT_EVENT_REGISTER_MERCHANT}`, formData, {
@@ -171,7 +170,6 @@ export const registerEvent = async (authToken: string, eventId: string) => {
 
     // Enhanced error handling
     if (axios.isAxiosError(error)) {
-
       if (error.response?.status === 401) {
         throw new Error('Authentication failed. Please login again.');
       } else if (error.response?.status === 404) {

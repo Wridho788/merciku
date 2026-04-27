@@ -1,11 +1,15 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import type { UseQueryResult, UseMutationResult } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import type {  UseMutationResult } from '@tanstack/react-query';
 import { useAuthStore } from '../../stores/authStore';
 import { customerApi } from '../customerApi';
-import { getProvince, getCityByProvince, getDistrictByCity } from '../api';
+// import { getProvince, getCityByProvince, getDistrictByCity } from '../api';
 import type { SetShippingRequest, SetShippingResponse } from '../types';
 
 // Location Hooks
+import { useQuery } from '@tanstack/react-query';
+import type { UseQueryResult } from '@tanstack/react-query';
+import { getProvince, getCityByProvince, getDistrictByCity } from '../api';
+
 export function useProvince(): UseQueryResult<any, Error> {
   return useQuery({
     queryKey: ['province'],

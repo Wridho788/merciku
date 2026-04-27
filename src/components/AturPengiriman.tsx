@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './AturPengiriman.css';
-import { useProvince, useCityByProvince, useDistrictByCity, useSetShipping } from '../api/hooks/shippingHooks';
+import { useProvince, useCityByProvince, useDistrictByCity, useSetShipping } from '../api/hooks/index';
 
 interface Province {
   id: string;
@@ -56,84 +56,84 @@ const AturPengiriman: React.FC<AturPengirimanProps> = ({ onSuccess }) => {
 
   // Note: Reset logic handled in change handlers to avoid infinite re-renders
 
-  const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const provinceId = e.target.value;
+  const handleProvinceChange = () => {
+    // const provinceId = e.target.value;
     
-    if (provinceId && provinceData?.content) {
-      // Find province by ID (convert string ID to number for comparison)
-      const province = provinceData.content.find((p: any) => p.id.toString() === provinceId);
+    // if (provinceId && provinceData?.content) {
+    //   // Find province by ID (convert string ID to number for comparison)
+    //   const province = provinceData.content.find((p: any) => p.id.toString() === provinceId);
       
-      if (province) {
-        setFormData(prev => ({
-          ...prev,
-          selectedProvince: {
-            id: province.id.toString(),
-            name: province.name
-          },
-          // Reset dependent fields
-          selectedCity: null,
-          selectedDistrict: null,
-        }));
-      }
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        selectedProvince: null,
-        selectedCity: null,
-        selectedDistrict: null,
-      }));
-    }
+    //   if (province) {
+    //     setFormData(prev => ({
+    //       ...prev,
+    //       selectedProvince: {
+    //         id: province.id.toString(),
+    //         name: province.name
+    //       },
+    //       // Reset dependent fields
+    //       selectedCity: null,
+    //       selectedDistrict: null,
+    //     }));
+    //   }
+    // } else {
+    //   setFormData(prev => ({
+    //     ...prev,
+    //     selectedProvince: null,
+    //     selectedCity: null,
+    //     selectedDistrict: null,
+    //   }));
+    // }
   };
 
-  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const cityId = e.target.value;
-    if (cityId && cityData?.content) {
-      // Find city by ID (convert string ID to number for comparison)
-      const city = cityData.content.find((c: any) => c.id.toString() === cityId);
+  const handleCityChange = () => {
+    // const cityId = e.target.value;
+    // if (cityId && cityData?.content) {
+    //   // Find city by ID (convert string ID to number for comparison)
+    //   const city = cityData.content.find((c: any) => c.id.toString() === cityId);
       
-      if (city) {
-        setFormData(prev => ({
-          ...prev,
-          selectedCity: {
-            id: city.id.toString(),
-            name: city.name,
-            province_id: formData.selectedProvince?.id || ''
-          },
-          // Reset dependent field
-          selectedDistrict: null,
-        }));
-      }
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        selectedCity: null,
-        selectedDistrict: null,
-      }));
-    }
+    //   if (city) {
+    //     setFormData(prev => ({
+    //       ...prev,
+    //       selectedCity: {
+    //         id: city.id.toString(),
+    //         name: city.name,
+    //         province_id: formData.selectedProvince?.id || ''
+    //       },
+    //       // Reset dependent field
+    //       selectedDistrict: null,
+    //     }));
+    //   }
+    // } else {
+    //   setFormData(prev => ({
+    //     ...prev,
+    //     selectedCity: null,
+    //     selectedDistrict: null,
+    //   }));
+    // }
   };
 
-  const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const districtId = e.target.value;
-    if (districtId && districtData?.content) {
-      // Find district by ID (convert string ID to number for comparison)
-      const district = districtData.content.find((d: any) => d.id.toString() === districtId);
+  const handleDistrictChange = () => {
+    // const districtId = e.target.value;
+    // if (districtId && districtData?.content) {
+    //   // Find district by ID (convert string ID to number for comparison)
+    //   const district = districtData.content.find((d: any) => d.id.toString() === districtId);
       
-      if (district) {
-        setFormData(prev => ({
-          ...prev,
-          selectedDistrict: {
-            id: district.id.toString(),
-            name: district.name,
-            city_id: formData.selectedCity?.id || ''
-          },
-        }));
-      }
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        selectedDistrict: null,
-      }));
-    }
+    //   if (district) {
+    //     setFormData(prev => ({
+    //       ...prev,
+    //       selectedDistrict: {
+    //         id: district.id.toString(),
+    //         name: district.name,
+    //         city_id: formData.selectedCity?.id || ''
+    //       },
+    //     }));
+    //   }
+    // } else {
+    //   setFormData(prev => ({
+    //     ...prev,
+    //     selectedDistrict: null,
+    //   }));
+    // }
   };
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -187,11 +187,11 @@ const AturPengiriman: React.FC<AturPengirimanProps> = ({ onSuccess }) => {
 
   // Helper functions to determine element states
   const isCityDropdownEnabled = () => {
-    return !cityLoading && formData.selectedProvince && cityData?.content;
+    return !cityLoading && !!formData.selectedProvince && !!cityData?.content;
   };
 
   const isDistrictDropdownEnabled = () => {
-    return !districtLoading && formData.selectedCity && districtData?.content;
+    return !districtLoading && !!formData.selectedCity && !!districtData?.content;
   };
 
   const isTextAreaEnabled = () => {

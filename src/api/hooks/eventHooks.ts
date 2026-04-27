@@ -3,10 +3,10 @@ import type { UseQueryResult, UseMutationResult } from '@tanstack/react-query';
 import { useAuthStore } from '../../stores/authStore';
 import {
   postEvent,
-  postFrontEvent,
+  // postFrontEvent,
   postArticle,
-  getEventById,
-  getEventsByCustomer,
+  // getEventById,
+  // getEventsByCustomer,
   registerMerchant,
   registerPublic,
   registerEvent,
@@ -26,58 +26,58 @@ export function usePostEvent(): UseMutationResult<any, Error, any> {
   });
 }
 
-export function usePostFrontEvent(): UseMutationResult<any, Error, any> {
-  return useMutation({
-    mutationFn: async (data: any) => {
-      try {
-        return await postFrontEvent(data);
-      } catch (error) {
-        throw error;
-      }
-    },
-  });
-}
+// export function usePostFrontEvent(): UseMutationResult<any, Error, any> {
+//   return useMutation({
+//     mutationFn: async (data: any) => {
+//       try {
+//         return await postFrontEvent(data);
+//       } catch (error) {
+//         throw error;
+//       }
+//     },
+//   });
+// }
 
-export function useEventById(id: string): UseQueryResult<any, Error> {
-  return useQuery({
-    queryKey: ['eventById', id],
-    queryFn: async () => {
-      try {
-        return await getEventById(id);
-      } catch (error) {
-        throw error;
-      }
-    },
-    enabled: !!id,
-    staleTime: 1000 * 60 * 5,
-    retry: 2,
-  });
-}
+// export function useEventById(id: string): UseQueryResult<any, Error> {
+//   return useQuery({
+//     queryKey: ['eventById', id],
+//     queryFn: async () => {
+//       try {
+//         return await getEventById(id);
+//       } catch (error) {
+//         throw error;
+//       }
+//     },
+//     enabled: !!id,
+//     staleTime: 1000 * 60 * 5,
+//     retry: 2,
+//   });
+// }
 
-interface UseEventsByCustomerPayload {
-  limit?: number;
-  offset?: number;
-}
+// interface UseEventsByCustomerPayload {
+//   limit?: number;
+//   offset?: number;
+// }
 
-export function useEventsByCustomer(
-  payload: UseEventsByCustomerPayload = {},
-): UseQueryResult<any, Error> {
-  const { token, isAuthenticated } = useAuthStore();
+// export function useEventsByCustomer(
+//   payload: UseEventsByCustomerPayload = {},
+// ): UseQueryResult<any, Error> {
+//   const { token, isAuthenticated } = useAuthStore();
 
-  const defaultPayload = {
-    limit: 30,
-    offset: 0,
-    ...payload,
-  };
+//   const defaultPayload = {
+//     limit: 30,
+//     offset: 0,
+//     ...payload,
+//   };
 
-  return useQuery({
-    queryKey: ['eventsByCustomer', JSON.stringify(defaultPayload), token],
-    queryFn: () => getEventsByCustomer(token!, defaultPayload),
-    enabled: isAuthenticated,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 2,
-  });
-}
+//   return useQuery({
+//     queryKey: ['eventsByCustomer', JSON.stringify(defaultPayload), token],
+//     queryFn: () => getEventsByCustomer(token!, defaultPayload),
+//     enabled: isAuthenticated,
+//     staleTime: 1000 * 60 * 5, // 5 minutes
+//     retry: 2,
+//   });
+// }
 
 // Article Hooks
 export function usePostArticle(): UseMutationResult<any, Error, any> {
@@ -131,17 +131,17 @@ export function useChapterById(chapterId: string): UseQueryResult<any, Error> {
   });
 }
 
-export function useChaptersByCustomer(customerId: string): UseQueryResult<any, Error> {
-  const { token, isAuthenticated } = useAuthStore();
+// export function useChaptersByCustomer(customerId: string): UseQueryResult<any, Error> {
+//   const { token, isAuthenticated } = useAuthStore();
 
-  return useQuery({
-    queryKey: ['chaptersByCustomer', customerId, token],
-    queryFn: () => chapterApi.getChaptersByCustomer(customerId, token!),
-    enabled: isAuthenticated && !!customerId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 2,
-  });
-}
+//   return useQuery({
+//     queryKey: ['chaptersByCustomer', customerId, token],
+//     queryFn: () => chapterApi.getChaptersByCustomer(customerId, token!),
+//     enabled: isAuthenticated && !!customerId,
+//     staleTime: 1000 * 60 * 5, // 5 minutes
+//     retry: 2,
+//   });
+// }
 
 export function useFrontChapters(payload: UseChaptersPayload = {}): UseQueryResult<any, Error> {
   const defaultPayload = {

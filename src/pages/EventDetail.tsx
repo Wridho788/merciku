@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AppbarDefault } from '../components/AppbarDefault';
-import EventRegistration from '../components/EventRegistration';
-import SEO from '../components/SEO';
-import { generateBreadcrumbs, formatDateForSchema, truncateText, stripHtml, formatPrice } from '../utils/seoUtils';
+// import EventRegistration from '../components/EventRegistration';
+// import SEO from '../components/SEO';
+// import { generateBreadcrumbs, formatDateForSchema, truncateText, stripHtml, formatPrice } from '../utils/seoUtils';
 import { useAuthStore } from '../stores/authStore';
 import { useCart } from '../contexts/CartContext';
-import { useEventById, useEventRegister } from '../api/hooks/index';
+import { useEventRegister } from '../api/hooks/index';
 import { extractIdFromParam } from '../api/codeMapping';
 import { toast } from 'react-toastify';
 import './EventDetail.css';
@@ -14,19 +14,21 @@ import './EventDetail.css';
 const EventDetail: React.FC = () => {
   const { eventId: eventParam } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated, token, validateToken, requireAuth } = useAuthStore();
+  const { isAuthenticated, token, validateToken, 
+    // requireAuth
+   } = useAuthStore();
   const { cartCount } = useCart();
   
-  const [isAuthValidated, setIsAuthValidated] = useState(false);
+  // const [isAuthValidated, setIsAuthValidated] = useState(false);
   const [triggerRegistration, setTriggerRegistration] = useState(false);
   
   // Extract actual event ID from URL parameter (handles both old ID format and new SEO format)
   const eventId = eventParam ? extractIdFromParam(eventParam) : null;
   
-  const eventByIdQuery = useEventById(eventId || '');
+
   const eventRegisterQuery = useEventRegister(triggerRegistration && eventId ? eventId : '');
   
-  const eventContent = eventByIdQuery.data?.content;
+  // const eventContent = undefined;
 
   // Handle event registration results
   useEffect(() => {
@@ -77,12 +79,12 @@ const EventDetail: React.FC = () => {
         if (!isValidToken) {
           // Auto logout if token is invalid
           useAuthStore.getState().logout();
-          setIsAuthValidated(false);
+          // setIsAuthValidated(false);
         } else {
-          setIsAuthValidated(true);
+          // setIsAuthValidated(true);
         }
       } else {
-        setIsAuthValidated(false);
+        // setIsAuthValidated(false);
       }
     };
 
@@ -97,94 +99,94 @@ const EventDetail: React.FC = () => {
     navigate('/cart', { state: { from: `/event-detail/${eventParam || ''}` } });
   };
 
-  const handleEventRegister = async () => {
-    // Enhanced authentication check
-    const authSuccess = requireAuth(() => {}, 'register for event');
-    if (!authSuccess || !isAuthValidated) {
-      toast.warning('Please login first to register for this event.', {
-        position: 'bottom-right',
-        autoClose: 1500,
-        theme: 'dark',
-      });
-      navigate('/login');
-      return;
-    }
+  // const handleEventRegister = async () => {
+  //   // Enhanced authentication check
+  //   const authSuccess = requireAuth(() => {}, 'register for event');
+  //   if (!authSuccess || !isAuthValidated) {
+  //     toast.warning('Please login first to register for this event.', {
+  //       position: 'bottom-right',
+  //       autoClose: 1500,
+  //       theme: 'dark',
+  //     });
+  //     navigate('/login');
+  //     return;
+  //   }
 
-    if (!eventId) {
-      toast.error('Event not found or invalid event code.', {
-        position: 'bottom-right',
-        autoClose: 1500,
-        theme: 'dark',
-      });
-      return;
-    }
+  //   if (!eventId) {
+  //     toast.error('Event not found or invalid event code.', {
+  //       position: 'bottom-right',
+  //       autoClose: 1500,
+  //       theme: 'dark',
+  //     });
+  //     return;
+  //   }
 
-    // Validate event ID format
-    if (!eventId.match(/^\d+$/)) {
-      toast.error('Event ID format is invalid.', {
-        position: 'bottom-right',
-        autoClose: 1500,
-        theme: 'dark',
-      });
-      return;
-    }
-    // Trigger the registration query
-    setTriggerRegistration(true);
-  };
+  //   // Validate event ID format
+  //   if (!eventId.match(/^\d+$/)) {
+  //     toast.error('Event ID format is invalid.', {
+  //       position: 'bottom-right',
+  //       autoClose: 1500,
+  //       theme: 'dark',
+  //     });
+  //     return;
+  //   }
+  //   // Trigger the registration query
+  //   setTriggerRegistration(true);
+  // };
 
-  const handleMerchantRegistration = () => {
-    if (eventId) {
-      navigate(`/merchant-registration/${eventId}`);
-    } else {
-      console.error('❌ No event ID available for merchant registration');
-    }
-  };
+  // const handleMerchantRegistration = () => {
+  //   if (eventId) {
+  //     navigate(`/merchant-registration/${eventId}`);
+  //   } else {
+  //     console.error('❌ No event ID available for merchant registration');
+  //   }
+  // };
 
-  const handlePublicRegistration = () => {
-    if (eventId) {
-      navigate(`/public-registration/${eventId}`);
-    } else {
-      console.error('❌ No event ID available for public registration');
-    }
-  };
+  // const handlePublicRegistration = () => {
+  //   if (eventId) {
+  //     navigate(`/public-registration/${eventId}`);
+  //   } else {
+  //     console.error('❌ No event ID available for public registration');
+  //   }
+  // };
 
-  if (eventByIdQuery.isLoading) {
-    return (
-      <div className="event-detail-page">
-        <AppbarDefault
-          title="Detail Event"
-          onBack={handleBackClick}
-          onCartClick={handleCartClick}
-          cartCount={cartCount}
-          defaultBack="/event"
-        />
-        <div className="event-detail-loading">
-          <p>Memuat detail event...</p>
-        </div>
-      </div>
-    );
-  }
+  // if (eventByIdQuery.isLoading) {
+  //   return (
+  //     <div className="event-detail-page">
+  //       <AppbarDefault
+  //         title="Detail Event"
+  //         onBack={handleBackClick}
+  //         onCartClick={handleCartClick}
+  //         cartCount={cartCount}
+  //         defaultBack="/event"
+  //       />
+  //       <div className="event-detail-loading">
+  //         <p>Memuat detail event...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  if (!eventContent) {
-    return (
-      <div className="event-detail-page">
-        <AppbarDefault
-          title="Detail Event"
-          onBack={handleBackClick}
-          onCartClick={handleCartClick}
-          cartCount={cartCount}
-          defaultBack="/event"
-        />
-        <div className="event-detail-loading">
-          <p>Data event tidak tersedia</p>
-        </div>
-      </div>
-    );
-  }
+  // if (!eventContent) {
+  //   return (
+  //     <div className="event-detail-page">
+  //       <AppbarDefault
+  //         title="Detail Event"
+  //         onBack={handleBackClick}
+  //         onCartClick={handleCartClick}
+  //         cartCount={cartCount}
+  //         defaultBack="/event"
+  //       />
+  //       <div className="event-detail-loading">
+  //         <p>Data event tidak tersedia</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="event-detail-page">
-      <SEO 
+      {/* <SEO 
         title={`${eventContent.name} • ${eventContent.chapter} / ${eventContent.dates} - ${eventContent.type_desc} | LapakBenz - Platform Komunitas & Event Indonesia`}
         description={truncateText(stripHtml(eventContent.desc), 155) + ` Event ${eventContent.chapter} pada ${eventContent.dates} - ${eventContent.time}. ${eventContent.fee > 0 ? `Biaya kontribusi: ${formatPrice(eventContent.fee)}` : 'Gratis'}. Daftar sekarang di lapakBenz!`}
         keywords={`${eventContent.name.toLowerCase()}, event ${eventContent.chapter.toLowerCase()}, ${eventContent.type_desc.toLowerCase()}, event lapakbenz, event komunitas indonesia, ${eventContent.dates}, ${eventContent.chapter}`}
@@ -194,7 +196,7 @@ const EventDetail: React.FC = () => {
         section="Event"
         tags={[eventContent.chapter, eventContent.type_desc, 'Event', 'Komunitas']}
         breadcrumbs={generateBreadcrumbs('event', eventContent.name)}
-      />
+      /> */}
       <AppbarDefault
         title="Detail Event"
         onBack={handleBackClick}
@@ -204,15 +206,15 @@ const EventDetail: React.FC = () => {
       />
       
       <div className="event-detail-content">
-        <img
+        {/* <img
           src={eventContent.image}
           alt={eventContent.name}
           className="event-detail-image"
-        />
+        /> */}
         
         <div className="event-detail-body">
           <h3 className="event-detail-title">
-            {eventContent.name}
+            {/* {eventContent.name} */}
           </h3>
           
           <div className="event-detail-info">
@@ -220,22 +222,22 @@ const EventDetail: React.FC = () => {
               <div className="event-info-item">
                 <b>Tanggal Event:</b>
                 <br />
-                {eventContent.dates} - {eventContent.time}
+                {/* {eventContent.dates} - {eventContent.time} */}
               </div>
               <div className="event-info-item">
                 <b>Chapter:</b>
                 <br />
-                {eventContent.chapter}
+                {/* {eventContent.chapter} */}
               </div>
               <div className="event-info-item">
                 <b>Tipe:</b>
                 <br />
-                {eventContent.type_desc}
+                {/* {eventContent.type_desc} */}
               </div>
               <div className="event-info-item">
                 <b>Deskripsi:</b>
                 <br />
-                {eventContent.desc}
+                {/* {eventContent.desc} */}
               </div>
             </div>
             
@@ -243,28 +245,28 @@ const EventDetail: React.FC = () => {
               <div className="event-info-item">
                 <b>Minimal Peserta:</b>
                 <br />
-                {eventContent.minimum_participants}
+                {/* {eventContent.minimum_participants} */}
               </div>
               <div className="event-info-item">
                 <b>Biaya Kontribusi:</b>
                 <br />
-                {eventContent.fee}
+                {/* {eventContent.fee} */}
               </div>
               <div className="event-info-item">
                 <b>Status:</b>
                 <br />
-                {eventContent.done_desc}
+                {/* {eventContent.done_desc} */}
               </div>
             </div>
           </div>
 
-          <EventRegistration
+          {/* <EventRegistration
             isAuthenticated={isAuthenticated && isAuthValidated}
             isPending={eventRegisterQuery.isFetching && triggerRegistration}
             onRegister={handleEventRegister}
-          />
+          /> */}
 
-          {(eventContent.allow_merchant === 1 || eventContent.allow_public === 1) && (
+          {/* {(eventContent.allow_merchant === 1 || eventContent.allow_public === 1) && (
             <div className="registration-navigation">
               <div className="registration-buttons">
                 {eventContent.allow_merchant === 1 && (
@@ -292,7 +294,7 @@ const EventDetail: React.FC = () => {
                 )}
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>

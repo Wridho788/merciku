@@ -143,6 +143,7 @@ export const productAPI = {
           'Content-Type': 'application/json'
         }
       });
+      console.log('Latest Products API Response:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching latest products:', error);

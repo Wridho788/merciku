@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppbarDefault } from '../components/AppbarDefault';
 import { FAB } from '../components/FAB';
-import { useEventsByCustomer } from '../api/hooks/index';
+
 import './AccountPages.css';
 
 interface EventItem {
@@ -28,17 +28,10 @@ interface EventItem {
 const MyEventHistory: React.FC = () => {
   const navigate = useNavigate();
 
-  // Fetch events using the new hook
-  const {
-    data: eventsResponse,
-    isLoading: eventsLoading,
-    error: eventsError,
-  } = useEventsByCustomer({
-    limit: 30,
-    offset: 0,
-  });
-
-  // Log the response to console
+  // Dummy state, ganti dengan API jika sudah ada
+  // const eventsResponse = undefined;
+  const eventsLoading = false;
+  const eventsError = undefined;
   const handleBackClick = () => {
     navigate(-1);
   };
@@ -55,7 +48,7 @@ const MyEventHistory: React.FC = () => {
   //   const events: any[] = [];
 
   // Use API data if available, otherwise fallback to static data
-  const events: EventItem[] = eventsResponse?.content?.result || [];
+  const events: EventItem[] = [];
 
   return (
     <div className="account-page">

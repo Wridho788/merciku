@@ -53,7 +53,7 @@ export const ProductTabs: React.FC = () => {
           </div>
         );
       }
-      return renderProductGrid(latestProductsData?.content?.result || []);
+      return renderProductGrid(latestProductsData?.result || []);
     }
 
     if (activeTab === 'bestseller') {
@@ -64,7 +64,7 @@ export const ProductTabs: React.FC = () => {
           </div>
         );
       }
-      return renderProductGrid(bestSellerProductsData?.content?.result || []);
+      return renderProductGrid(bestSellerProductsData?.result || []);
     }
 
     return null;
