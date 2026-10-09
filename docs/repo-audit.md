@@ -11,7 +11,7 @@ Snapshot of repository hygiene checks: secrets, ignored files, dependencies, lic
 | File | `src/services/oneSignalService.ts` (constant `ONESIGNAL_REST_API_KEY`) |
 | Introduced | `b8b9500` "add onesignal push notif" (2025-12-06) |
 | Present in | Every later commit on `master` up to `2b23934`, and branch `refactoring_api` |
-| Remote | `github.com/Wridho788/merciku` is public, so the key should be treated as leaked |
+| Remote | `github.com/Wridho788/merciku` and `github.com/Wridho788/lapakbenz` are both public and share this history, so the key should be treated as leaked |
 | Impact | A REST API key can send push notifications to all subscribers of the app |
 | Current tree | File removed on `chore/repo-hygiene`. It was not imported anywhere, so the built bundle never contained the key |
 
