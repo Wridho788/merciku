@@ -22,3 +22,21 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Build output
+build
+*.tsbuildinfo
+
+# Environment variables (commit .env.example only)
+.env
+.env.*
+!.env.example
+
+# Caches and test output
+.cache
+.vite
+.eslintcache
+coverage
+
+# Local Claude Code settings (per machine)
+.claude/settings.local.json
